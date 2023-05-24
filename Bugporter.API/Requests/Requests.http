@@ -3,6 +3,17 @@ POST http://localhost:7071/api/bugs
 Accept "application/json"
 
 {
-    "summary" : "very bad bug",
-    "description" : "Div on homepage is not centered"
+    "summary" : "Testing Bugreport API",
+    "description" : "Testing to add an issue from API to GitHub"
+}
+
+
+
+### Post bug
+POST http://localhost:7071/api/bugs
+Accept "application/json"
+
+{
+    "summary" : "Test with options...",
+    "description" : "lorem ipsum etc..."
 }

@@ -1,19 +1,22 @@
-﻿using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Octokit;
 using System.Threading.Tasks;
 
 namespace Bugporter.API.Features.ReportBug.GitHub;
 public class CreateGitHubIssueCommand
 {
     private readonly ILogger<CreateGitHubIssueCommand> _logger;
-
-    public CreateGitHubIssueCommand(ILogger<CreateGitHubIssueCommand> logger)
+    private readonly GitHubClient _gitHubClient;
+    private readonly GitHubRepositoryOptions _githubRepositoryOptions;
+    public CreateGitHubIssueCommand(
+        ILogger<CreateGitHubIssueCommand> logger,
+        IOptions<GitHubRepositoryOptions> githubRepositoryOptions,
+        GitHubClient gitHubClient)
     {
         _logger = logger;
+        _gitHubClient = gitHubClient;
+        _githubRepositoryOptions = githubRepositoryOptions.Value;
     }
 
     public async Task<ReportedBug> Execute(NewBug newBug)
@@ -21,9 +24,17 @@ public class CreateGitHubIssueCommand
         _logger.LogInformation("Creating GitHub issue");
 
         //! Create GitHub Issue
-        var bug = new ReportedBug("1", newBug.Summary, newBug.Description);
+        var newIssue = new NewIssue(newBug.Summary) { Body = newBug.Description };
 
-        _logger.LogInformation($"Successfully created GitHub issue {bug.Id}");
-        return bug;
+        Issue createdIssue = await _gitHubClient.Issue.Create(
+            _githubRepositoryOptions.Owner,
+            _githubRepositoryOptions.Name, newIssue);
+
+        _logger.LogInformation($"Successfully created GitHub issue {createdIssue.Number}");
+
+        return new ReportedBug(
+            createdIssue.Number.ToString(),
+            createdIssue.Title,
+            createdIssue.Body);
     }
 }
