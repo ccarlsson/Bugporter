@@ -17,3 +17,15 @@ Accept "application/json"
     "summary" : "Test with options...",
     "description" : "lorem ipsum etc..."
 }
+
+
+### Post bug
+POST http://localhost:7071/api/bugs
+Accept "application/json"
+
+{
+    "summary" : "Test with authorization...",
+    "description" : "lorem ipsum etc..."
+}
+
+

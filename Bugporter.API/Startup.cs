@@ -1,5 +1,6 @@
 ﻿using Bugporter.API.Features.ReportBug.GitHub;
 using FirebaseAdmin;
+using FirebaseAdminAuthentication.DependencyInjection.Extensions;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -28,9 +29,9 @@ public class Startup : FunctionsStartup
         {
             Credential = GoogleCredential.FromJson(firebaseConfig)
         });
-
-
+        
         services.AddSingleton(firebaseApp);
+        services.AddFirebaseAuthentication();
 
         var githubToken = config.GetValue<string>("GITHUB_TOKEN");
 
