@@ -26,12 +26,17 @@ namespace Bugporter.API.Functions
 
         [FunctionName("ReportBugFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous,  "post", Route = "bugs")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous,  "post", Route = "bugs")] ReportBugRequest req)
         {
-            NewBug newBug = new NewBug("Very bad bug", "The div on the homepage is  not centered");
+            NewBug newBug = new NewBug(req.Summary, req.Description);
             ReportedBug reportedBug = await _createGitHubIssueCommand.Execute(newBug);
 
-            return new OkObjectResult(reportedBug);
+            return new OkObjectResult(new ReportBugResponse
+            {
+                Id = reportedBug.Id,
+                Summary = reportedBug.Summary,
+                Description = reportedBug.Description,
+            });
         }
     }
 }

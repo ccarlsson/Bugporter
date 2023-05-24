@@ -1,2 +1,8 @@
 ### Post bug
 POST http://localhost:7071/api/bugs
+Accept "application/json"
+
+{
+    "summary" : "very bad bug",
+    "description" : "Div on homepage is not centered"
+}

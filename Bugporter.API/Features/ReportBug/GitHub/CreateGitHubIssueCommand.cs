@@ -21,7 +21,7 @@ public class CreateGitHubIssueCommand
         _logger.LogInformation("Creating GitHub issue");
 
         //! Create GitHub Issue
-        var bug = new ReportedBug("1", "A very bad bug", "The div on the homepage is not centered");
+        var bug = new ReportedBug("1", newBug.Summary, newBug.Description);
 
         _logger.LogInformation($"Successfully created GitHub issue {bug.Id}");
         return bug;
