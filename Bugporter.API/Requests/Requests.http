@@ -1,2 +1,2 @@
-### Function1
-GET http://localhost:7071/api/Function1?name=Christer
+### Post bug
+POST http://localhost:7071/api/bugs
